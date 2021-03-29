@@ -1,41 +1,19 @@
 package com.KeanuNichols.LightningStrike;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.List;
 import java.lang.Math;
 
 public class LightningStrike extends JavaPlugin {
 	
-	public long randomNumber(){
-		long leftLimit = 100L;
-	    long rightLimit = 600L;
-	    long generatedLong = leftLimit + (long) (Math.random() * (rightLimit - leftLimit));
-		return generatedLong;
-	}
-	@Override
-    public void onEnable() {
-		System.out.println("Hello");
-		//getCommand("lightning").setExecutor(new Bolt());
-		JavaPlugin plugin = this;
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable()
-        {
-            public void run()
-            {			
-        		Player plr = Bukkit.getPlayer("KeanuNichols");
-            	plr.sendMessage(Float.toString(randomNumber()));
-            	Bolt();
-            }
-        }, 20L, randomNumber());
-		System.out.println("After");
-    }
-    @Override
-    public void onDisable() {
-    }
-    
-    public void Bolt(){
+	public void BoltPlayer(){
     	for (Player online : Bukkit.getServer().getOnlinePlayers()) {
             Player plr = Bukkit.getPlayer(online.getName());
             Location loca = plr.getLocation();
@@ -46,5 +24,93 @@ public class LightningStrike extends JavaPlugin {
 		//String name = sender.getName();				
 		//Player plr = Bukkit.getPlayer(name);
     }
+	
+	public void BoltRandomLocation(){
+		for (Player online : Bukkit.getServer().getOnlinePlayers()){
+			Player plr = Bukkit.getPlayer(online.getName());
+            Location loca = plr.getLocation();
+    		World world = plr.getWorld();
+    		Chunk chunk = loca.getChunk();
+    		int y = loca.getBlockY();
+    		int z = (int) chunk.getZ();
+    		Location nloca = chunk.getBlock(randomInt(0,16),y,z-1).getLocation();
+    		plr.sendMessage("random location: " + nloca.toString());
+    		world.strikeLightning(nloca);
+		}
+	}
+	
+	public void BoltRandomEntity(){
+		for (Player online : Bukkit.getServer().getOnlinePlayers()){
+			Player plr = Bukkit.getPlayer(online.getName());
+			List <Entity> entities = plr.getNearbyEntities(40, 40, 40);
+			if(!entities.isEmpty()){
+				Entity target = entities.get(randomInt(0,entities.size()));
+				World world = plr.getWorld();
+				world.strikeLightning(target.getLocation());
+			}
+			/*
+            Location loca = plr.getLocation();
+    		World world = plr.getWorld();
+    		Chunk chunk = loca.getChunk();
+    		int y = loca.getBlockY();
+    		int z = (int) chunk.getZ();
+    		Location nloca = chunk.getBlock(randomInt(0,16),y,z-1).getLocation();
+    		plr.sendMessage("random location: " + nloca.toString());
+    		world.strikeLightning(nloca);
+    		*/
+		}
+		
+	}
+	
+	public long randomNumberTime(){
+		long leftLimit = 100L;
+	    long rightLimit = 600L;
+	    long generatedLong = leftLimit + (long) (Math.random() * (rightLimit - leftLimit));
+		return generatedLong;
+	}
+	
+	public int randomInt(int min, int max){
+		//int min = 0;
+		//int max = 2;
+		int number = min + (int) (Math.random() * (max - min));
+		return number;
+	}
+	
+	public void getBoltType(){
+		int num = randomInt(0,3);
+		Player plr = Bukkit.getPlayer("KeanuNichols");
+    	plr.sendMessage("random num: " + Float.toString(num));
+		if(num == 0){
+			BoltPlayer();
+		}else if(num == 1){
+			BoltRandomLocation();
+		}else{
+			BoltRandomEntity();
+		}
+	}
+	@Override
+    public void onEnable() {
+		System.out.println("Hello");
+		//getCommand("lightning").setExecutor(new Bolt());
+		JavaPlugin plugin = this;
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable()
+        {
+            public void run()
+            {			
+            	for (Player online : Bukkit.getServer().getOnlinePlayers()){
+            		Player plr = Bukkit.getPlayer(online.getName());
+	            	plr.sendMessage(Float.toString(randomNumberTime()));
+	            	getBoltType();
+            	}
+            	
+            	//Bolt();
+            }
+        }, 20L, randomNumberTime());
+		System.out.println("After");
+    }
+    @Override
+    public void onDisable() {
+    }
+    
 
 }
