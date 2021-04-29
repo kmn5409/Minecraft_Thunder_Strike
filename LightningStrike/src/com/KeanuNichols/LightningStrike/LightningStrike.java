@@ -21,9 +21,6 @@ public class LightningStrike extends JavaPlugin {
     		World world = plr.getWorld();
     		world.strikeLightning(loca);
         }
-    	//System.out.println("bolt");
-		//String name = sender.getName();				
-		//Player plr = Bukkit.getPlayer(name);
     }
 	
 	public void BoltRandomLocation(){
@@ -35,7 +32,6 @@ public class LightningStrike extends JavaPlugin {
     		int y = loca.getBlockY();
     		int z = (int) chunk.getZ();
     		Location nloca = chunk.getBlock(randomInt(0,8),y,z-1).getLocation();
-    		plr.sendMessage("random location: " + nloca.toString());
     		world.strikeLightning(nloca);
 		}
 	}
@@ -49,16 +45,6 @@ public class LightningStrike extends JavaPlugin {
 				World world = plr.getWorld();
 				world.strikeLightning(target.getLocation());
 			}
-			/*
-            Location loca = plr.getLocation();
-    		World world = plr.getWorld();
-    		Chunk chunk = loca.getChunk();
-    		int y = loca.getBlockY();
-    		int z = (int) chunk.getZ();
-    		Location nloca = chunk.getBlock(randomInt(0,16),y,z-1).getLocation();
-    		plr.sendMessage("random location: " + nloca.toString());
-    		world.strikeLightning(nloca);
-    		*/
 		}
 		
 	}
@@ -77,8 +63,6 @@ public class LightningStrike extends JavaPlugin {
 	
 	public void getBoltType(Player player){
 		int num = randomInt(0,3);
-		Player plr = Bukkit.getPlayer(player.getName());
-    	plr.sendMessage("random num: " + Float.toString(num));
 		if(num == 0){
 			BoltPlayer();
 		}else if(num == 1){
@@ -89,28 +73,19 @@ public class LightningStrike extends JavaPlugin {
 	}
 	@Override
     public void onEnable() {
-		System.out.println("Hello");
-		//getCommand("lightning").setExecutor(new Bolt());
 		JavaPlugin plugin = this;
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable()
         {
             public void run()
             {			
-            	for (Player online : Bukkit.getServer().getOnlinePlayers()){
-            		Player plr = Bukkit.getPlayer(online.getName());
-	            	plr.sendMessage(Float.toString(randomNumberTime()));
-	            	//getBoltType();
-            	}
             	int numPlayers = Bukkit.getOnlinePlayers().size();
             	if(numPlayers > 0){
             		int random = new Random().nextInt(numPlayers);
             		Player player = (Player)Bukkit.getOnlinePlayers().toArray()[random];
             		getBoltType(player);
-            		//Bolt();
             	}
             }
         }, 20L, randomNumberTime());
-		System.out.println("After");
     }
     @Override
     public void onDisable() {
