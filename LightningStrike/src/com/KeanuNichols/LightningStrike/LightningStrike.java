@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
+import java.util.Random;
 import java.lang.Math;
 
 public class LightningStrike extends JavaPlugin {
@@ -33,7 +34,7 @@ public class LightningStrike extends JavaPlugin {
     		Chunk chunk = loca.getChunk();
     		int y = loca.getBlockY();
     		int z = (int) chunk.getZ();
-    		Location nloca = chunk.getBlock(randomInt(0,16),y,z-1).getLocation();
+    		Location nloca = chunk.getBlock(randomInt(0,8),y,z-1).getLocation();
     		plr.sendMessage("random location: " + nloca.toString());
     		world.strikeLightning(nloca);
 		}
@@ -70,15 +71,13 @@ public class LightningStrike extends JavaPlugin {
 	}
 	
 	public int randomInt(int min, int max){
-		//int min = 0;
-		//int max = 2;
 		int number = min + (int) (Math.random() * (max - min));
 		return number;
 	}
 	
-	public void getBoltType(){
+	public void getBoltType(Player player){
 		int num = randomInt(0,3);
-		Player plr = Bukkit.getPlayer("KeanuNichols");
+		Player plr = Bukkit.getPlayer(player.getName());
     	plr.sendMessage("random num: " + Float.toString(num));
 		if(num == 0){
 			BoltPlayer();
@@ -100,10 +99,15 @@ public class LightningStrike extends JavaPlugin {
             	for (Player online : Bukkit.getServer().getOnlinePlayers()){
             		Player plr = Bukkit.getPlayer(online.getName());
 	            	plr.sendMessage(Float.toString(randomNumberTime()));
-	            	getBoltType();
+	            	//getBoltType();
             	}
-            	
-            	//Bolt();
+            	int numPlayers = Bukkit.getOnlinePlayers().size();
+            	if(numPlayers > 0){
+            		int random = new Random().nextInt(numPlayers);
+            		Player player = (Player)Bukkit.getOnlinePlayers().toArray()[random];
+            		getBoltType(player);
+            		//Bolt();
+            	}
             }
         }, 20L, randomNumberTime());
 		System.out.println("After");
