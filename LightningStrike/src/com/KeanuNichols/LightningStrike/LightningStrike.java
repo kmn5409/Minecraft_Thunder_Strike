@@ -30,8 +30,8 @@ public class LightningStrike extends JavaPlugin {
     		World world = plr.getWorld();
     		Chunk chunk = loca.getChunk();
     		int y = loca.getBlockY();
-    		int z = (int) chunk.getZ();
-    		Location nloca = chunk.getBlock(randomInt(0,8),y,z-1).getLocation();
+    		//int z = (int) chunk.getZ();
+    		Location nloca = chunk.getBlock(randomInt(0,3),y,randomInt(0,3)).getLocation();
     		world.strikeLightning(nloca);
 		}
 	}
